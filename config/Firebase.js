@@ -1,32 +1,18 @@
-import firebase from 'firebase'
-import {
-	API_KEY,
-	AUTH_DOMAIN,
-	DATABASE_URL,
-	PROJECT_ID,
-	MESSAGE_SENDER_ID,
-	APP_ID
-} from 'react-native-dotenv'
-import 'firebase/firestore'
+import firebase from "firebase"
+import "firebase/firestore"
 
 const firebaseConfig = {
-	apiKey: API_KEY,
-	authDomain: AUTH_DOMAIN,
-	databaseURL: DATABASE_URL,
-	projectId: PROJECT_ID,
-	storageBucket: '',
-	messagingSenderId: MESSAGE_SENDER_ID,
-	appId: APP_ID
+   apiKey: "AIzaSyCQ2TUd23Ca2xAuukXSsXHTFEzI9z6r-TQ",
+   authDomain: "rn-test-solomon-markets.firebaseapp.com",
+   projectId: "rn-test-solomon-markets",
+   storageBucket: "rn-test-solomon-markets.appspot.com",
+   messagingSenderId: "886876369392",
+   appId: "1:886876369392:web:0d7302fa910015ee63ed35",
 }
 
 // Initialize Firebase
 let Firebase = firebase.initializeApp(firebaseConfig)
 
 export const db = firebase.firestore()
-
-// avoid deprecated warnings
-db.settings({
-	timestampsInSnapshots: true
-})
 
 export default Firebase

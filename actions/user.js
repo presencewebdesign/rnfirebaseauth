@@ -1,75 +1,84 @@
-import Firebase, { db } from '../config/Firebase.js'
+import Firebase, { db } from "../config/Firebase.js"
 
 // define types
 
-export const UPDATE_EMAIL = 'UPDATE_EMAIL'
-export const UPDATE_PASSWORD = 'UPDATE_PASSWORD'
-export const LOGIN = 'LOGIN'
-export const SIGNUP = 'SIGNUP'
+export const UPDATE_EMAIL = "UPDATE_EMAIL"
+export const UPDATE_PASSWORD = "UPDATE_PASSWORD"
+export const LOGIN = "LOGIN"
+export const SIGNUP = "SIGNUP"
 
 // actions
 
-export const updateEmail = email => {
-	return {
-		type: UPDATE_EMAIL,
-		payload: email
-	}
+export const updateEmail = (email) => {
+   return {
+      type: UPDATE_EMAIL,
+      payload: email,
+   }
 }
 
-export const updatePassword = password => {
-	return {
-		type: UPDATE_PASSWORD,
-		payload: password
-	}
+export const updatePassword = (password) => {
+   return {
+      type: UPDATE_PASSWORD,
+      payload: password,
+   }
 }
 
 export const login = () => {
-	return async (dispatch, getState) => {
-		try {
-			const { email, password } = getState().user
-			const response = await Firebase.auth().signInWithEmailAndPassword(email, password)
-
-			dispatch(getUser(response.user.uid))
-		} catch (e) {
-			alert(e)
-		}
-	}
+   return async (dispatch, getState) => {
+      try {
+         const { email, password } = getState().user
+         const response = await Firebase.auth().signInWithEmailAndPassword(
+            email,
+            password
+         )
+         dispatch(getUser(response.user.uid))
+      } catch (e) {
+         console.log("🚀 ~ file: user.js ~ line 51 ~ return ~ e", e)
+         alert(e)
+      }
+   }
 }
 
-export const getUser = uid => {
-	return async (dispatch, getState) => {
-		try {
-			const user = await db
-				.collection('users')
-				.doc(uid)
-				.get()
+export const getUser = (uid) => {
+   return async (dispatch, getState) => {
+      try {
+         const user = await db.collection("users").doc(uid).get()
+         console.log(
+            "🚀 ~ file: user.js ~ line 45 ~ return ~ user",
+            user.data()
+         )
 
-			dispatch({ type: LOGIN, payload: user.data() })
-		} catch (e) {
-			alert(e)
-		}
-	}
+         if (user.data()) {
+            dispatch({ type: LOGIN, payload: user.data() })
+         }
+      } catch (e) {
+         console.log("🚀 ~ file: user.js ~ line 72 ~ return ~ e", e)
+         alert(e)
+      }
+   }
 }
 
 export const signup = () => {
-	return async (dispatch, getState) => {
-		try {
-			const { email, password } = getState().user
-			const response = await Firebase.auth().createUserWithEmailAndPassword(email, password)
-			if (response.user.uid) {
-				const user = {
-					uid: response.user.uid,
-					email: email
-				}
+   return async (dispatch, getState) => {
+      try {
+         const { email, password } = getState().user
+         const response = await Firebase.auth().createUserWithEmailAndPassword(
+            email,
+            password
+         )
+         if (response.user.uid) {
+            const user = {
+               uid: response.user.uid,
+               email: email,
+            }
 
-				db.collection('users')
-					.doc(response.user.uid)
-					.set(user)
+            db.collection("users").doc(response.user.uid).set(user)
 
-				dispatch({ type: SIGNUP, payload: user })
-			}
-		} catch (e) {
-			alert(e)
-		}
-	}
+            dispatch({ type: SIGNUP, payload: user })
+         }
+      } catch (e) {
+         console.log("🚀 ~ file: user.js ~ line 101 ~ return ~ e", e)
+         alert(e)
+      }
+   }
 }
